@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IzaQuoteGenV2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cardo&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gray-900">
+    <div class="h-screen w-screen flex justify-center items-center">
+        <div class="relative h-full w-full">
+            <div id="loader"
+                class="bg-purple-300/[10%] bg-opacity-40 fixed inset-0 z-50 flex justify-center items-center h-0 border-b-2 border-sky-400 shadow-2xl shadow-sky-500 backdrop-blur-3xl opacity-0">
+                <div class="bg-sky-300/[40%] w-full h-full z-51 items-center align-items center flex justify-center">
+                    <img src="https://static-00.iconduck.com/assets.00/tailwind-css-icon-512x64-vzqzx6f0.png"
+                        class="w-46 h-12 m-12">
+                    <img src="https://www.northware.mx/wp-content/uploads/2021/04/javascript-que-es-jquery.png"
+                        class="w-46 h-12 m-12">
+                </div>
+            </div>
+
+
+            <img id="bg-img" class="absolute h-full w-full"
+                style="box-shadow: inset 0px 0px 100px 40px rgb(0 0 0 / 50%)">
+            <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center flex-col">
+                <p id="W" class="text-white text-xl text-center" style="font-family: 'Cardo', serif;">
+                    Hello there! Welcome to IzaQuoteGenerator!</p>
+                <p id="W2" class="text-white text-sm mt-4" style="font-family: 'Cardo', serif;">Click the button below
+                    to generate quote!<br /></p>
+                <button id="reg"
+                    class="bg-white-800 my-6 p-2 px-4 rounded-full bg-opacity-0 backdrop-filter backdrop-blur-lg backdrop-saturate-87 border border-white border-opacity-12 text-white text-bold hover:backdrop-blur-3xl hover:backdrop-saturate-200 hover:bg-opacity-[50%] hover:shadow-white-500/12 hover:shadow-lg transition ease-in-out duration-300 active:bg-opacity-[100%] ">
+                    Regenerate
+                    Quote</button>
+            </div>
+            <div class="absolute left-0 w-full bottom-6 flex items-center justify-center flex-col-reverse">
+                <button id="made"
+                    class="bg-sky-800 my-2 px-6 rounded-full bg-opacity-0 backdrop-filter backdrop-blur-lg backdrop-saturate-87 border border-sky-500 border-opacity-12 text-sky-300 text-bold hover:backdrop-blur-3xl hover:backdrop-saturate-200 hover:bg-opacity-[50%] hover:shadow-sky-500/12 hover:shadow-lg transition ease-in-out duration-300 active:bg-opacity-[100%] ">
+                    Made using</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+<style>
+    #reg:hover {
+        box-shadow: 0 0 40px -10px #fff, inset 6px 9px 40px -22px #fff;
+    }
+
+    #reg:active {
+        box-shadow: 0 0 40px -10px #fff, inset 6px 9px 90px -22px #fff;
+    }
+
+    #made:hover {
+        box-shadow: 0 0 40px -10px rgb(26, 187, 251), inset 6px 9px 40px -22px rgb(26, 187, 251);
+    }
+
+    #made:active {
+        box-shadow: 0 0 40px -10px rgb(26, 187, 251), inset 6px 9px 90px -22px rgb(26, 187, 251);
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        // API endpoint to retrieve random image from Lorem Picsum
+        var url = "https://picsum.photos/1317/673/?random";
+
+        // Set the background image of the element with ID "bg-img"
+        $('#bg-img').css({
+            'background-image': 'url(' + url + ')',
+            'background-size': 'cover',
+            'background-position': 'center',
+            'position': 'relative',
+            'filter': 'brightness(0.6)', // Add position relative to enable z-index
+        });
+    });
+
+    $(document).ready(function () {
+        // Define variables for elements
+        var $quoteText = $('#W');
+        var $quoteAuthor = $('#W2');
+        var $quoteButton = $('#reg');
+        var $bgImg = $('#bg-img');
+
+        // Define function to fetch quote from API
+        function getQuote() {
+            $.ajax({
+                url: 'https://api.quotable.io/random',
+                success: function (data) {
+                    // Fade out the quote text and author
+                    $quoteText.fadeOut(500);
+                    $quoteAuthor.fadeOut(500, function () {
+                        // Replace the quote text and author with new content
+                        $quoteText.text('"' + data.content + '"');
+                        $quoteAuthor.text('- ' + data.author);
+
+                        // Fade in the new quote text and author
+                        $quoteText.fadeIn(500);
+                        $quoteAuthor.fadeIn(500);
+                    });
+                }
+            });
+        }
+
+        // Generate quote on button click, 
+        $quoteButton.click(function () {
+            // Change the background image to a new random image
+            var newUrl = "https://picsum.photos/1317/673/?random&t=" + new Date().getTime();
+            $bgImg.css({
+                'background-image': 'url(' + newUrl + ')'
+            });
+
+
+            // Generate a new quote
+            getQuote();
+        });
+
+    });
+    $(document).ready(function () {
+        $('#made').on('click', function () {
+            var loader = $('#loader');
+            if (loader.is(':visible')) {
+                loader.animate({
+                    height: '0%',
+                    opacity: 0
+                }, 1000, function () {
+                    loader.hide();
+                });
+            } else {
+                loader.show().animate({
+                    height: '25%',
+                    opacity: 1
+                }, 1000);
+            }
+        });
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
